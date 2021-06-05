@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Socket.IO chat</title>
+	<style>
+		body {
+			background: rgb(74,166,255);
+			background: radial-gradient(circle, rgba(74,166,255,1) 0%, rgba(29,67,181,1) 100%);
+			color: white;
+		}
+
+		#option {
+			margin: auto;
+			width: 400px;
+			height: 200px;
+			margin-top: 400px;
+			background-color: #1d43b5;
+			border-radius: 10px;
+			align-items: center;
+			font-size: 24px;
+		}
+
+		#nick {
+			padding: 0 0 10px 0;
+			border: none;
+			border-bottom: 1px solid #e0e0e0;
+			background-color: transparent; 
+			outline: none;
+			transition: 0.3s;
+			color: white;
+		}
+
+		#optionBtn{
+			text-align: center;
+			width: 90px;
+			height: 30px;
+			border: 1px solid #e0e0e0;
+			border-radius: 10px;
+			background-color: #1d43b5;
+		}
+
+		#optionBtn:hover{
+			color: white;
+			background-color: #e0e0e0;
+			cursor: pointer;
+			background: rgb(242,160,16);
+			background: linear-gradient(0deg, rgba(242,160,16,1) 0%, rgba(242,194,16,1) 100%);
+		}
+
+		#content {
+			display: none;
+			margin: auto;
+			width: 1440px;
+			height: 980px;
+			text-align: center;
+		}
+
+		.flex-col {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.flex-row {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.flex-center{
+			justify-content: center;
+		}
+
+		.flex-spc-btwn{
+			justify-content: space-between;
+		}
+
+		.flex-spc-arnd{
+			justify-content: space-around;
+		}
+
+		#round{
+			font-size: 60px;
+		}
+
+		#question{
+			margin: auto;
+			height: 100px;
+			width: 900px;
+			font-size: 40px;
+			background-color: #1d43b5;
+			border-radius: 10px;
+			line-height: 100px;
+		}
+		
+
+		.wrong{
+			width: 200px;
+			height: 100px;
+			border-radius: 10px;
+			background-color: yellow;
+			margin-top: 20px;
+			/*background: rgb(242,160,16);
+			background: linear-gradient(0deg, rgba(242,160,16,1) 0%, rgba(242,194,16,1) 100%);
+			font-size: 24px;*/
+		}
+
+		.gradient{
+			background: rgb(242,160,16);
+			background: linear-gradient(0deg, rgba(242,160,16,1) 0%, rgba(242,194,16,1) 100%);
+		}
+
+		.active{
+			width: 200px;
+			height: 100px;
+			border-radius: 10px;
+			background-color: red;
+			margin-top: 20px;
+		}
+
+		.answer{
+			width: 500px;
+			height: 70px;
+			background-color: #1d43b5;
+			border-radius: 10px;
+			margin-top: 20px;
+			line-height: 70px;
+			font-size: 40px;
+			transition: 0.5s;
+		}
+
+		#team1, #team2 {
+			text-align: center;
+			background-color: #1d43b5;
+			width: 200px;
+			height: 120px;
+			margin-top: 10px;
+			border-radius: 10px;
+		}
+
+		#score1, #score2{
+			width: 180px;
+			height: 50px;
+			font-size: 40px;
+		}
+
+		#nicknames1, #nicknames2{
+			margin-top: 170px;
+			font-size: 24px;
+			width: 200px;
+			height: 300px;
+		}
+
+		#nicknames1 div, #nicknames2 div {
+			width: 200px;
+			height: 30px;
+			background-color: #1d43b5;
+			border-radius: 10px;
+			margin-top: 10px;
+		}
+
+		#store{
+			margin: auto;
+			margin-top: 30px;
+			width: 500px;
+			line-height: 100px;
+		}
+
+		#left, #right{
+			width: 100px;
+			height: 100px;
+			background-color: #1d43b5;
+			border-radius: 10px;
+			font-size: 40px;
+		}
+
+		#fond{
+			width: 200px;
+			height: 100px;
+			background-color: #1d43b5;
+			border-radius: 10px;
+			font-size: 40px;
+		}
+
+		.button{
+			margin: auto;
+			margin-top: 20px;
+			width: 200px;
+			height: 100px;
+			background-color: red;
+			border-radius: 10px;
+			font-size: 40px;
+			line-height: 50px;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.deactive{
+			background-color: grey;
+		}
+
+		select{
+			width: 200px;
+			height: 70px;
+			margin-top: 20px;
+			font-size: 24px;
+		}
+
+		.sel{
+			width: 220px;
+		    height: 70px;
+		    margin-top: 20px;
+		    font-size: 24px;
+		    background: rgb(242,160,16);
+			background: linear-gradient(0deg, rgba(242,160,16,1) 0%, rgba(242,194,16,1) 100%);
+			line-height: 70px;
+			border-radius: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="option" class="flex-col flex-spc-arnd">
+		<div id="nickInputConteiner">
+			<label>Никнейм:</label>
+			<input id="nick" type="text" name="nickname">
+		</div>
+		<div>
+			<label>Команда</label>
+			<select id="team">
+				<option>1</option>
+				<option>2</option>
+			</select>
+		</div>
+		<div id='optionBtn'>СТАРТ</div>
+	</div>
+	<div id="content" class="flex-col">
+		<div id="round">Раунд </div>
+		<div id="question"></div>
+		<div id="game" class="flex-row flex-spc-arnd">
+			<div id="nicknames1">
+				<div>fsa</div>
+				<div>fsa</div>
+				<div>fsa</div>
+			</div>
+			<div id="team1">
+				<h2 id="teamName1">TEAM 1</h2>
+				<div id="score1">0</div>
+				<div id="wrong1-1" class="wrong"></div>
+				<div id="wrong1-2" class="wrong"></div>
+				<div id="wrong1-3" class="wrong"></div>
+
+			</div>
+			<div id="table">
+				<div id="1" class="answer flex-row flex-spc-arnd">
+				</div>
+				<div id="2" class="answer flex-row flex-spc-arnd"></div>
+				<div id="3" class="answer flex-row flex-spc-arnd"></div>
+				<div id="4" class="answer flex-row flex-spc-arnd"></div>
+				<div id="5" class="answer flex-row flex-spc-arnd"></div>
+				<div id="6" class="answer flex-row flex-spc-arnd"></div>
+			</div>
+			<div id="team2">
+				<h2 id="teamName2">TEAM 2</h2>
+				<div id="score2">0</div>
+				<div id="wrong2-1" class="wrong"></div>
+				<div id="wrong2-2" class="wrong"></div>
+				<div id="wrong2-3" class="wrong"></div>
+			</div>
+			<div id="nicknames2">
+				<div>fsa</div>
+				<div>fsa</div>
+				<div>fsa</div>
+			</div>
+		</div>
+		<div id="store" class="flex-row flex-spc-arnd">
+			<div id="fond">0</div>
+		</div>
+		<div class="button deactive"></div>
+	</div>
+
+	<script src="/socket.io/socket.io.js"></script>
+
+	<script>
+		var socket = io();
+
+		let admin;
+		let team1;
+		let team2;
+		let option = document.getElementById('option');
+		let optionBtn = document.getElementById('optionBtn');
+		let nick = 'Anon';
+		let button = document.getElementsByClassName('button')[0];
+
+		socket.on('new connection', function(admin_, team1_, team2_){
+			admin = admin_;
+			team1 = team1_;
+			team2 =  team2_;
+			let nicknames1 = document.getElementById('nicknames1');
+			let nicknames2 = document.getElementById('nicknames2');
+
+			nicknames1.innerHTML = '';
+			nicknames2.innerHTML = '';
+
+			for(let i=0; i<team1.length;i++){
+				let nick = document.createElement('div');
+				nick.innerHTML = team1[i].nick;
+				nicknames1.appendChild(nick);
+			}
+
+			for(let i=0; i<team2.length;i++){
+				let nick = document.createElement('div');
+				nick.innerHTML = team2[i].nick;
+				nicknames2.appendChild(nick);
+			}
+		});
+
+		socket.on('change button', function(str, socId){
+			if(str=='admin'){
+				button.classList.toggle('deactive');
+				if(document.getElementById('team1').classList.contains('gradient')){
+					document.getElementById('team1').classList.toggle('gradient');
+				}
+				if(document.getElementById('team2').classList.contains('gradient')){
+					document.getElementById('team2').classList.toggle('gradient');
+				}
+			}
+		});
+
+		socket.on('get question', function(question_, round_){
+			for(let i=0; i<6; i++){
+				if(document.getElementById(''+(i+1)).classList.contains('gradient')){
+					document.getElementById(''+(i+1)).classList.toggle('gradient');
+				}
+				document.getElementById(''+(i+1)).innerHTML = ''+(i+1);
+				document.getElementById('question').innerHTML = question_;
+				document.getElementById('round').innerHTML = 'Раунд '+round_;
+			}
+		});
+
+		socket.on('get answer', function(id_, answer_, value_, fond_){
+			document.getElementById(id_).style.transform = 'rotateX(90deg)';
+			setTimeout(function(){
+				document.getElementById(id_).innerHTML = '<div>'+answer_+'</div><div>'+value_+'</div>';
+				document.getElementById(id_).classList.toggle('gradient');
+				document.getElementById(id_).style.transform = 'rotateX(0deg)';
+				document.getElementById('fond').innerHTML = fond_;
+			}, 500);
+			
+		});
+
+		socket.on('change wrong', function(id_){
+			document.getElementById(id_).classList.toggle('active');
+			if(document.getElementById(id_).classList.contains('active')){
+				//music
+			}
+		});
+
+		socket.on('reset fond', function(fond_){
+			document.getElementById('fond').innerHTML = ''+fond_;
+		});
+
+		socket.on('changeTeamName', function(name_, id_){
+			document.getElementById(id_).innerHTML = name_;
+		});
+
+		socket.on('change score', function(score_, id_){
+			document.getElementById(id_).innerHTML = score_;
+		});
+
+		socket.on('team answer', function(id_){
+			document.getElementById(id_).classList.toggle('gradient');
+			if(!button.classList.contains('deactive')){
+				button.classList.toggle('deactive');
+			}
+			
+		});
+
+		socket.on('load final', function(){
+			document.getElementById('question').innerHTML = '';
+			let table = document.getElementById('table');
+			table.innerHTML = '';
+
+			for(let i=0; i<5; i++){
+				let div = document.createElement('div');
+		        div.style.width = '500px';
+		        div.classList.add('flex-row','flex-spc-btwn');
+		        let sel1 = document.createElement('div');
+            	sel1.setAttribute('id', 'sel'+i+'1');
+            	sel1.innerHTML='XXXXXX';
+            	sel1.classList.add('sel');
+            	let sel2 = document.createElement('div');
+            	sel2.setAttribute('id', 'sel'+i+'2');
+            	sel2.innerHTML='XXXXXX';
+            	sel2.classList.add('sel');
+            	div.appendChild(sel1);
+            	div.appendChild(sel2);
+            	table.appendChild(div);
+			}
+
+		});
+
+		socket.on('final answer', function(answer_,id_){
+			document.getElementById(id_).innerHTML = answer_;
+
+		});
+
+
+		
+
+		optionBtn.onclick = function(){
+			nick = document.getElementById('nick').value;
+			option.style.display = 'none';
+			document.getElementById('content').style.display='block';
+			teamSel = document.getElementById('team');      
+			client = {nick: nick, type: 'client', team: teamSel.options[teamSel.selectedIndex].value};
+			socket.emit('enter',client);
+		}
+
+		button.onclick = function(){
+			if(!this.classList.contains('deactive')){
+				socket.emit('change button', 'client', socket.id);
+				this.classList.toggle('deactive');
+			}
+		}
+	</script>
+</body>
+</html>

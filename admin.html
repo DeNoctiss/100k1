@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <style>
+    body {
+      background: rgb(74,166,255);
+      background: radial-gradient(circle, rgba(74,166,255,1) 0%, rgba(29,67,181,1) 100%);
+      color: white;
+    }
+
+    #option {
+      margin: auto;
+      width: 400px;
+      height: 200px;
+      margin-top: 400px;
+      background-color: #1d43b5;
+      border-radius: 10px;
+      align-items: center;
+      font-size: 24px;
+    }
+
+    #nick {
+     padding: 0 0 10px 0;
+     border: none;
+     border-bottom: 1px solid #e0e0e0;
+     background-color: transparent; 
+     outline: none;
+     transition: 0.3s;
+     color: white;
+   }
+
+   #optionBtn{
+    text-align: center;
+    width: 90px;
+    height: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #1d43b5;
+    color: white;
+  }
+
+  #optionBtn:hover{
+    color: white;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    background: rgb(242,160,16);
+    background: linear-gradient(0deg, rgba(242,160,16,1) 0%, rgba(242,194,16,1) 100%);
+  }
+
+  #content {
+    display: none;
+    margin: auto;
+    width: 1440px;
+    height: 980px;
+    text-align: center;
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .flex-center{
+    justify-content: center;
+  }
+
+  .flex-spc-btwn{
+    justify-content: space-between;
+  }
+
+  .flex-spc-arnd{
+    justify-content: space-around;
+  }
+
+  #round{
+    font-size: 60px;
+  }
+
+  #question{
+    margin: auto;
+    height: 100px;
+    width: 900px;
+    font-size: 40px;
+    background-color: #1d43b5;
+    border-radius: 10px;
+    line-height: 100px;
+    overflow-y: scroll;
+  }
+
+  #question::-webkit-scrollbar { display: none;}
+
+  .wrong{
+    width: 200px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: yellow;
+    margin-top: 20px;
+  }
+
+  .active{
+    width: 200px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: red;
+    margin-top: 20px;
+  }
+
+  .answer{
+    width: 500px;
+    height: 70px;
+    background-color: #1d43b5;
+    border-radius: 10px;
+    margin-top: 20px;
+    line-height: 70px;
+    font-size: 40px;
+  }
+
+  #team1, #team2 {
+    text-align: center;
+    background-color: #1d43b5;
+    width: 200px;
+    height: 120px;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+
+  #score1, #score2{
+    width: 180px;
+    height: 50px;
+    font-size: 40px;
+  }
+
+  #nicknames1, #nicknames2{
+    margin-top: 150px;
+    font-size: 24px;
+    width: 200px;
+    height: 300px;
+  }
+
+  #nicknames1 div, #nicknames2 div {
+    width: 200px;
+    height: 30px;
+    background-color: #1d43b5;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  #store{
+    margin: auto;
+    margin-top: 30px;
+    width: 500px;
+    line-height: 100px;
+  }
+
+  #left, #right, #prevQuest, #nextQuest{
+    width: 100px;
+    height: 100px;
+    background-color: #1d43b5;
+    border-radius: 10px;
+    font-size: 40px;
+    line-height: 100px;
+  }
+
+  #fond{
+    width: 200px;
+    height: 100px;
+    background-color: #1d43b5;
+    border-radius: 10px;
+    font-size: 40px;
+  }
+
+  .button{
+    margin: auto;
+    margin-top: 20px;
+    width: 200px;
+    height: 100px;
+    background-color: red;
+    border-radius: 10px;
+    font-size: 40px;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .deactive{
+    background-color: grey;
+  }
+
+  .gradient{
+    background: rgb(242,160,16);
+    background: linear-gradient(0deg, rgba(242,160,16,1) 0%, rgba(242,194,16,1) 100%);
+  }
+
+  select{
+    width: 220px;
+    height: 70px;
+    margin-top: 20px;
+    font-size: 24px;
+  }
+</style>
+</head>
+<body>
+  <div id="option" class="flex-col flex-spc-arnd">
+    <div id="nickInputConteiner">
+      <label>Никнейм:</label>
+      <input id="nick" type="text" name="nickname">
+    </div>
+    <input type="file" onchange="readFile(this)">
+    <div id='optionBtn'>СТАРТ</div>
+  </div>
+  <div id="content" class="flex-col">
+    <div id="round">Раунд </div>
+    <div class="flex-row flex-spc-arnd">
+      <div id="prevQuest"><</div>
+      <div id="question"></div>
+      <div id="nextQuest">></div>
+    </div>
+    
+    <div id="game" class="flex-row flex-spc-arnd">
+      <div id="nicknames1">
+        <div>fsa</div>
+        <div>fsa</div>
+        <div>fsa</div>
+      </div>
+      <div id="team1">
+        <h2 id="teamName1">TEAM 1</h2>
+        <div id="score1">0</div>
+
+      </div>
+      <div id="table">
+        <div id="1" class="answer flex-row flex-spc-arnd"></div>
+        <div id="2" class="answer flex-row flex-spc-arnd"></div>
+        <div id="3" class="answer flex-row flex-spc-arnd"></div>
+        <div id="4" class="answer flex-row flex-spc-arnd"></div>
+        <div id="5" class="answer flex-row flex-spc-arnd"></div>
+        <div id="6" class="answer flex-row flex-spc-arnd"></div>
+      </div>
+      <div id="team2">
+        <h2 id="teamName2">TEAM 2</h2>
+        <div id="score2">0</div>
+      </div>
+      <div id="nicknames2">
+        <div>fsa</div>
+        <div>fsa</div>
+        <div>fsa</div>
+      </div>
+    </div>
+    <div id="store" class="flex-row flex-spc-btwn">
+      <div id="left"><</div>
+      <div id="fond">0</div>
+      <div id="right">></div>
+    </div>
+    <div class="button"></div>
+  </div>
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let admin;
+    let team1;
+    let team2;
+    var socket = io();
+    let button = document.getElementsByClassName('button')[0];
+    let option = document.getElementById('option');
+    let optionBtn = document.getElementById('optionBtn');
+    let nick = 'Anon';
+    let data = '';
+    let nextBtn = document.getElementById('nextQuest');
+    let prevBtn = document.getElementById('prevQuest');
+    let fondBtn = document.getElementById('fond');
+    let teamName1 = document.getElementById('teamName1');
+    let teamName2 = document.getElementById('teamName2');
+    let score1Btn = document.getElementById('score1');
+    let score2Btn = document.getElementById('score2');
+    let left = document.getElementById('left');
+    let right = document.getElementById('right');
+    let round = 0;
+    let question = '';
+    let score1 = 0;
+    let score2 = 0;
+    let fond = 0;
+
+    socket.on('new connection', function(admin_, team1_, team2_){
+      admin = admin_;
+      team1 = team1_;
+      team2 =  team2_;
+
+      let nicknames1 = document.getElementById('nicknames1');
+      let nicknames2 = document.getElementById('nicknames2');
+
+      nicknames1.innerHTML = '';
+      nicknames2.innerHTML = '';
+
+      for(let i=0; i<team1.length;i++){
+        let nick = document.createElement('div');
+        nick.innerHTML = team1[i].nick;
+        nicknames1.appendChild(nick);
+      }
+
+      for(let i=0; i<team2.length;i++){
+        let nick = document.createElement('div');
+        nick.innerHTML = team2[i].nick;
+        nicknames2.appendChild(nick);
+      }
+
+    });
+
+    socket.on('change button', function(str, socId, msc){
+      if(str=='client'){
+        button.classList.toggle('deactive');
+        for(let i=0; i<team1.length; i++){
+          if(team1[i].id == socId){
+            document.getElementById('team1').classList.toggle('gradient');
+            socket.emit('team answer', 'team1');
+          }
+        }
+        for(let i=0; i<team2.length; i++){
+          if(team2[i].id == socId){
+            document.getElementById('team2').classList.toggle('gradient');
+            socket.emit('team answer', 'team2');
+          }
+        }
+      }
+    });
+
+
+    for(let i=0; i<3; i++){ //wrong1-1
+      let wrong = document.createElement('div');
+      wrong.classList.add('wrong');
+      wrong.onclick = function(){
+        this.classList.toggle('active');
+        socket.emit('change wrong', 'wrong1-'+(i+1));
+        if(this.classList.contains('active')){
+          //music
+        }
+      }
+      document.getElementById('team1').appendChild(wrong);
+    }
+
+    for(let i=0; i<3; i++){
+      let wrong = document.createElement('div');
+      wrong.classList.add('wrong');
+      wrong.onclick = function(){
+        this.classList.toggle('active');
+        socket.emit('change wrong', 'wrong2-'+(i+1));
+        if(this.classList.contains('active')){
+        //music
+      }
+    }
+    document.getElementById('team2').appendChild(wrong);
+  }
+
+
+
+
+  optionBtn.onclick = function(){
+    nick = document.getElementById('nick').value;
+    option.style.display = 'none';
+    document.getElementById('content').style.display='block';
+    admin = {nick: nick, type: 'admin', team: 0};
+    socket.emit('enter',admin);
+  }
+
+  function readFile(input) {
+    let file = input.files[0];
+
+    let reader = new FileReader();
+
+    reader.readAsText(file);
+
+    reader.onload = function() {
+      data = reader.result;
+      console.log(data);
+      data = [
+      {
+        question: 'Что всегда берут с собой на пляж?',
+        type: 'Обычный',
+        answers: [{answer: 'Полотенце', value: 30},
+        {answer: 'Купальник', value: 25},
+        {answer: 'Очки', value: 20},
+        {answer: 'Крем для загара', value: 15},
+        {answer: 'Воду', value: 10},
+        {answer: 'Покрывало', value: 5}]
+      },
+      {
+        question: 'Что бывает надувным?',
+        type: 'Обычный',
+        answers: [{answer: 'Шар', value: 30},
+        {answer: 'Матрас', value: 25},
+        {answer: 'Мяч', value: 20},
+        {answer: 'Лодка', value: 15},
+        {answer: 'Батут', value: 10},
+        {answer: 'Круг', value: 5}]
+      },
+      {
+        question: 'Что едят с чаем?',
+        type: 'Обычный',
+        answers: [{answer: 'Печенье', value: 30},
+        {answer: 'Конфеты', value: 25},
+        {answer: 'Бутерброд', value: 20},
+        {answer: 'Торт', value: 15},
+        {answer: 'Варенье', value: 10},
+        {answer: 'Хлеб', value: 5}]
+      },
+      {
+        question: 'Что бывает плюшевым?',
+        type: 'Обычный',
+        answers: [{answer: 'Мишка', value: 30},
+        {answer: 'Юбка', value: 25},
+        {answer: 'Плед/Одеяло', value: 20},
+        {answer: 'Заяц', value: 15},
+        {answer: 'Костюм', value: 10},
+        {answer: 'Ткань', value: 5}]
+      },
+      {
+        question: 'Что люди стараются запомнить наизусть?',
+        type: 'Обычный',
+        answers: [{answer: 'Стихи', value: 30},
+        {answer: 'Номер телефона', value: 25},
+        {answer: 'Адрес', value: 20},
+        {answer: 'Имя', value: 15},
+        {answer: 'Пин код', value: 10},
+        {answer: 'Молитву', value: 5}]
+      },
+      {
+        question: 'Что обычно маринуют?',
+        type: 'Обратный',
+        answers: [{answer: 'Овощи', value: 30},
+        {answer: 'Капусту', value: 25},
+        {answer: 'Мясо', value: 20},
+        {answer: 'Помидоры', value: 15},
+        {answer: 'Грибы', value: 10},
+        {answer: 'Огурцы', value: 5}]
+      },
+      {
+        type: 'Финал',
+        q: ['Что едят с чаем?','Что гремит на улице?','Что может получить студент?','Что может красить женщина?','Что может быть на носу?'],
+        questions: [
+        [
+            {answer: '-', value: 0}, //Почему не показывает телевизор?
+            {answer: 'Печенье', value: 30},
+            {answer: 'Конфеты', value: 25},
+            {answer: 'Бутерброд', value: 20},
+            {answer: 'Торт', value: 15},
+            {answer: 'Варенье', value: 10},
+            {answer: 'Хлеб', value: 5}
+            ],
+            [
+            {answer: '-', value: 0}, //Caмaя пoпyляpнaя ёмкocть?
+            {answer: 'Гром', value: 30},
+            {answer: 'Машины', value: 25},
+            {answer: 'Салют', value: 20},
+            {answer: 'Трамвай', value: 15},
+            {answer: 'Музыка', value: 10},
+            {answer: 'Стройка', value: 5}
+            ],
+            [
+            {answer: '-', value: 0}, //Чтo мoжнo пoдтянyть?
+            {answer: 'Автомат', value: 30},
+            {answer: 'Зачет/Незачет', value: 25},
+            {answer: 'Стипендию', value: 20},
+            {answer: 'Диплом', value: 15},
+            {answer: 'Оценку', value: 10},
+            {answer: 'Грамоту', value: 5}
+            ],
+            [
+            {answer: '-', value: 0}, //Что может быть каменным?
+            {answer: 'Волосы', value: 30},
+            {answer: 'Ногти', value: 25},
+            {answer: 'Губы', value: 20},
+            {answer: 'Глаза', value: 15},
+            {answer: 'Лицо', value: 10},
+            {answer: 'Забор', value: 5}
+            ],
+            [
+            {answer: '-', value: 0}, //Kyдa в квapтиpe пpячyтcя дeти игpaя в пpятки?
+            {answer: 'Прыщ', value: 30},
+            {answer: 'Очки', value: 25},
+            {answer: 'Бородавка', value: 20},
+            {answer: 'Родинка', value: 15},
+            {answer: 'Веснушки', value: 10},
+            {answer: 'Праздник', value: 5}
+            ]
+            ]
+          }
+          ]
+        };
+
+        reader.onerror = function() {
+          console.log(reader.error);
+        };
+
+
+      }
+
+
+
+      button.onclick = function(){
+        if(!this.classList.contains('deactive')){
+          socket.emit('change button', 'admin', '');
+          this.classList.toggle('deactive');
+          if(document.getElementById('team1').classList.contains('gradient')){
+            document.getElementById('team1').classList.toggle('gradient');
+          }
+          if(document.getElementById('team2').classList.contains('gradient')){
+            document.getElementById('team2').classList.toggle('gradient');
+          }
+        }
+      }
+
+      nextBtn.onclick = function(){
+        let type = data[round].type;
+
+        if(type === 'Финал'){
+          question = '';
+          loadFinal(round);
+          document.getElementById('round').innerHTML = 'Финал';
+          socket.emit('load final');
+        }
+        else{
+          loadAnswers(round);
+          round+=1;
+          document.getElementById('round').innerHTML = 'Раунд ' + round + '('+type+')';
+        }
+      }
+
+      prevBtn.onclick = function(){
+        round-=1;
+        let type = data[round-1].type;
+
+        if(type === 'Финал'){
+          question = '';
+          loadFinal(round-1);
+          document.getElementById('round').innerHTML = 'Финал';
+        }
+        else{
+          loadAnswers(round-1);
+
+          document.getElementById('round').innerHTML = 'Раунд ' + round + '('+type+')';
+        }
+      }
+
+      fondBtn.onclick = function(){
+        //this.innerHTML = '0';
+        count = prompt('Введите количество очков');
+        this.innerHTML = count;
+        fond = Number(count);
+        socket.emit('reset fond', fond);
+      }
+
+      teamName1.onclick = function(){
+        let name = prompt('Введите название команды');
+        this.innerHTML = name;
+        socket.emit('changeTeamName', name, this.getAttribute('id'));
+      }
+
+      teamName2.onclick = function(){
+        let name = prompt('Введите название команды');
+        this.innerHTML = name;
+        socket.emit('changeTeamName', name, this.getAttribute('id'));
+      }
+
+      score1Btn.onclick = function(){
+        let score = prompt('Введите количество очков команды');
+        this.innerHTML = score;
+        socket.emit('change score', score, this.getAttribute('id'));
+      }
+
+      score2Btn.onclick = function(){
+        let score = prompt('Введите количество очков команды');
+        this.innerHTML = score;
+        socket.emit('change score', score, this.getAttribute('id'));
+      }
+
+      left.onclick = function(){
+        let score = fond + Number(score1Btn.innerHTML);
+        score1Btn.innerHTML = score;
+        socket.emit('change score', score, 'score1');
+        fond = 0;   
+        fondBtn.innerHTML = fond;
+        socket.emit('reset fond', fond);
+
+      }
+
+      right.onclick = function(){
+        let score = fond + Number(score2Btn.innerHTML);
+        score2Btn.innerHTML = score;
+        socket.emit('change score', score, 'score2');
+        fond = 0;
+        fondBtn.innerHTML = fond;
+        socket.emit('reset fond', fond);
+      }
+
+      function loadAnswers(curRound){
+
+        for(let i=0; i<6; i++){
+          field = document.getElementById(''+(i+1));
+          if(field.classList.contains('gradient')){
+            field.classList.toggle('gradient');
+          }
+          let answer = data[curRound].answers[i].answer;
+          let value = data[curRound].answers[i].value;
+          field.innerHTML = '<div>'+answer+'</div><div>'+value+'</div>';
+          field.onclick = function(){
+            fond+=value*(curRound+1);
+            document.getElementById('fond').innerHTML = ''+fond;
+            socket.emit('get answer', this.getAttribute('id'), answer, value, fond);
+            this.classList.toggle('gradient');
+          }
+          
+        }
+
+        question = data[curRound].question;
+        document.getElementById('question').innerHTML = question;
+
+        socket.emit('get question', question, round+1);
+
+      }
+
+      function loadFinal(curRound){
+        let q = document.getElementById('question');
+        q.innerHTML = '';
+        for(let i=0; i<data[curRound].q.length; i++){
+          let div = document.createElement('div');
+          div.innerHTML = data[curRound].q[i];
+          q.appendChild(div);
+        }
+
+        let table = document.getElementById('table');
+        table.innerHTML = '';
+
+        for(let i=0; i<5; i++){
+          let div = document.createElement('div');
+          div.style.width = '500px';
+          div.classList.add('flex-row','flex-spc-btwn');
+          let sel1 = document.createElement('select');
+          sel1.setAttribute('id', 'sel'+i+'1');
+          let sel2 = document.createElement('select');
+          sel2.setAttribute('id', 'sel'+i+'2');
+
+          sel1.onchange = function(){
+            fond += (round+1)*Number(this.options[this.selectedIndex].value);
+            document.getElementById('fond').innerHTML = ''+fond;
+            socket.emit('final answer',this.options[this.selectedIndex].innerHTML, this.getAttribute('id'));
+            socket.emit('reset fond', fond);
+          }
+
+          sel2.onchange = function(){
+            fond += (round+1)*Number(this.options[this.selectedIndex].value);
+            document.getElementById('fond').innerHTML = ''+fond;
+            socket.emit('final answer',this.options[this.selectedIndex].innerHTML, this.getAttribute('id'));
+            socket.emit('reset fond', fond);
+          }
+
+          for(let j=0; j<7;j++){
+            let opt1 = document.createElement('option');
+            opt1.innerHTML = ''+data[curRound].questions[i][j].answer;
+            opt1.setAttribute('value',data[curRound].questions[i][j].value);
+            sel1.appendChild(opt1);
+
+            let opt2 = document.createElement('option');
+            opt2.innerHTML = data[curRound].questions[i][j].answer;
+            opt2.setAttribute('value',data[curRound].questions[i][j].value);
+            sel2.appendChild(opt2);
+          }
+          div.appendChild(sel1);
+          div.appendChild(sel2);
+          table.appendChild(div);
+        }
+
+      }
+
+
+    </script>
+  </body>
+  </html>
